@@ -23,5 +23,5 @@
   "engine":{
   	"node":">=0.10.0"
   },
-  "main":"json-binder.js"
+  "main":"./index.js"
 }
