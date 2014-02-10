@@ -1,0 +1,27 @@
+{
+  "name": "deep-browser",
+  "description":"everything you need to use deepjs browser side.",
+  "author":"Gilles Coomans <gilles.coomans@gmail.com>",
+  "contributors": ["Philippe Delabye <phil@chemicalrules.net>"],
+  "version": "0.1.0",
+  "contributors": [],
+  "licenses": [
+    {
+         "type": "LGPLv3.0",
+         "url": "http://www.gnu.org/licenses/lgpl-3.0.txt"
+     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deepjs/deep-browser.git"
+  },
+  "dependencies": {
+    "deepjs": ">=0.10.8"
+  },
+  "mappings":{
+  },
+  "engine":{
+  	"node":">=0.10.0"
+  },
+  "main":"json-binder.js"
+}
