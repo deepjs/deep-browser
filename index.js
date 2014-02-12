@@ -94,6 +94,8 @@ function (require, deep)
 				uri = $(this).attr("href");
 			else
 				uri = $(this).attr("rel").substring(7);
+			if(!uri)
+				return;
 			if(uri.substring(0,4) === 'http')
 				return;
 			if(uri[0] == '/')
@@ -125,7 +127,7 @@ function (require, deep)
 			return deep.login(datas);
 		};
 		func._isDone_ = true;
-		addInChain.call(self, func);
+		deep.utils.addInChain.call(self, func);
 		return this;
 	});
 	deep.Chain.addHandle("logout", function () {
@@ -134,7 +136,16 @@ function (require, deep)
 			return deep.logout();
 		};
 		func._isDone_ = true;
-		addInChain.call(self, func);
+		deep.utils.addInChain.call(self, func);
+		return this;
+	});
+	deep.Chain.addHandle("route", function (route) {
+		var self = this;
+		var func = function (s, e) {
+			return deep.route(route);
+		};
+		func._isDone_ = true;
+		deep.utils.addInChain.call(self, func);
 		return this;
 	});
 
