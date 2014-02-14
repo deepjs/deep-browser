@@ -22,8 +22,42 @@ function (require, deep)
 	deep.client.jquery.JSON.createDefault();
 	deep.client.Swig.createDefault();
 	deep.jquery.addDomProtocols();
- 
-	var oldURL = "/";
+
+	var closure = {};
+
+	deep.browser = {
+		login : function () {
+			return {
+				route : "/login",
+				remove : function () {
+					return $("#login").hide();
+				},
+				refresh:function () {
+					$("#login-error").hide();
+
+					if(!this.initialised)
+					{
+						//bind sur les champs et bouton
+						$("#login-button").click(function (e) {
+							e.preventDefault();
+							e.stopPropagation();
+							if($("#email").val() && $("#password").val())
+								deep.login({email:$("#email").val(),password:$("#password").val()})
+								.done(function () {
+									$("#login-error").hide();
+									deep.route(deep.lastRoute);
+								})
+								.fail(function (error) {
+									$("#login-error").show();
+								});
+						});
+					}
+					$("#login").show();
+				}
+			};
+		}
+	};
+	var oldURL = deep.lastRoute = "/";
 	deep.route.on("refreshed", function(event){
 		console.log("ROUTE refreshed : ", event.datas, oldURL);
 		var refreshed = event.datas.refreshed;
@@ -44,7 +78,7 @@ function (require, deep)
 		}
 		if(event.datas.route == oldURL)
 			return;
-		oldURL = event.datas.route;
+		oldURL = deep.lastRoute = event.datas.route;
 		window.location.hash = event.datas.route;
 	});
 
@@ -113,12 +147,22 @@ function (require, deep)
 		});
 	};
 
-	deep.login = function(obj){
-		return deep.store("json").post(obj, "/login" ).log();
+	deep.login = function(obj, from){
+		var oldRoute = from || deep.route();
+		return deep.store("json").post(obj, "/login" ).done(function (user) {
+               return deep.store("appdata").post(user,"/user");
+		})
+		.done(closure.loginCallback || function(){})
+		.done(function (roles) {
+			//gestion de lurl + route avec l'ancien url
+			deep.generalModes("roles", roles);
+		})
 	};
 
 	deep.logout = function(){
-		return deep.store("json").post({}, "/logout" ).log();
+		return deep.store("json").post({}, "/logout" ).done(function () {
+			return deep.store("appdata").del("/user");
+		});
 	};
 
 	deep.Chain.addHandle("login", function (datas) {
@@ -148,7 +192,34 @@ function (require, deep)
 		deep.utils.addInChain.call(self, func);
 		return this;
 	});
+	deep.store.jstorage.Object.create("appdata");
+	deep.client.jquery.JSON.create("user","/user/");
 
+	deep.initApp = function (loginCallback) {
+		//
+		closure.loginCallback = loginCallback;
+		return deep.store("appdata")
+		.get("/user")
+		.done(function (user) {
+			console.log("User data 1 : ", this._success);
+		})
+		.done(function (user) {
+			console.log("User form appData = ", user);
+			return deep.get("user::" + user.id)
+			.done(function (user) {
+                return deep.store("appdata").post(user,"/user");
+            })
+			.done(function (user) {
+                return loginCallback(user);
+			})
+			.done(function (roles) {
+                deep.generalModes("roles",roles);
+			})
+			.fail(function (e) {
+                deep.generalModes("roles","public");
+			});
+		}).logError();
+	};
 	return deep;
 	// to do  : add login/logout in chain
 });
