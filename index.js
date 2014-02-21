@@ -7,7 +7,6 @@ if (typeof define !== 'function') {
 define([
 	"require",
 	"deepjs/deep",
-	"deepjs/lib/stores/collection-store",
 	"deepjs/lib/view",
 	"deep-swig/index",
 	"deep-jquery/index",
@@ -15,46 +14,44 @@ define([
 	"deep-local-storage/index",
 	"deepjs/lib/unit",
 	"deep-data-bind/json-binder",
-	"deep-routes/index"
+	"deep-routes/index",
+	"deepjs/lib/stores/collection-store",
+	"deepjs/lib/stores/object-store",
+	"./lib/login",
+	"./lib/deep-link",
+	"./lib/ui"
 ],
 function (require, deep)
 {
+
+	/**
+	 * TODO = create local mini sandbox that load deep-browser
+	 */
+
+	/**
+	 * main app need to provide : 
+		user store : (could be dummies) 
+			deep.client.jquery.JSON.create("user","/user/")
+			or
+			deep.store.Collection.create("user", [{ id:"u1", email:"john@doe.com", password:"test" }])
+			(could be ocmised)
+		login store : (could be dummy)
+			deep.client.jquery.JSON.create("login","/login/")
+			or
+			deep.store.dummy.Login.createDefault();
+		logout store : (could be dummy)
+			deep.client.jquery.JSON.create("logout","/logout/")
+			or
+			deep.store.dummy.Login.createDefault();
+	 */
+
+
 	deep.client.jquery.JSON.createDefault();
 	deep.client.Swig.createDefault();
 	deep.jquery.addDomProtocols();
- 
-	var oldURL = "/";
-	deep.route.on("refreshed", function(event){
-		console.log("ROUTE refreshed : ", event.datas, oldURL);
-		var refreshed = event.datas.refreshed;
-		if(refreshed)
-		{
-			if(!refreshed.forEach)
-				refreshed = [refreshed];
-			refreshed.forEach(function(refreshed){
-				// console.log("RELINK : ",refreshed.refreshed);
-				if(refreshed.loaded && refreshed.loaded.placed)
-					deep.ui.relink(refreshed.loaded.placed);
-			});
-		}
-		else
-		{
-			// console.log("BODY RELINK");
-			deep.ui.relink("body");
-		}
-		if(event.datas.route == oldURL)
-			return;
-		oldURL = event.datas.route;
-		window.location.hash = event.datas.route;
-	});
+	deep.store.jstorage.Object.create("appdata");
 
-	window.addEventListener("hashchange", function(event) {
-		var newHash = window.location.hash.substring(1) || "/";
-		//console.log("__________________________ hash change : ", newHash, oldURL);
-		if(newHash == oldURL)
-			return;
-		deep.route(newHash || "/");
-	}, false);
+	var login = require("./lib/login");
 
 	var _uaMatch = function(ua) {
 		ua = ua.toLowerCase();
@@ -62,84 +59,119 @@ function (require, deep)
 			/(webkit)[ \/]([\w.]+)/.exec( ua ) ||
 			/(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
 			/(msie) ([\w.]+)/.exec( ua ) ||
-			ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) 
-			|| [];
+			ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
 		return {
 			browser: match[ 1 ] || '',
 			version: match[ 2 ] || '0'
 		};
 	};
 
-	deep.ui.detectBrowser = function() {
-		var browser = {},
-			matched = _uaMatch(navigator.userAgent);
-		if (matched.browser) {
-			browser[matched.browser] = true;
-			browser.version = matched.version;
-		}
-		if (browser.chrome)
-			browser.webkit = true;
-		else if (browser.webkit)
-			browser.safari = true;
-		return browser;
-	};
+	deep.browser = {
+		getRoles : function(session){
+			if(session && session.user)
+			{
+				if(session.user.roles)
+					return user.roles;
+				return "user";
+			}
+			return "public";
+		},
+		userAgent : function() {
+			var browser = {},
+				matched = _uaMatch(navigator.userAgent);
+			if (matched.browser) {
+				browser[matched.browser] = true;
+				browser.version = matched.version;
+			}
+			if (browser.chrome)
+				browser.webkit = true;
+			else if (browser.webkit)
+				browser.safari = true;
+			return browser;
+		},
+		init : function(config)
+		{
+			/*
+				var config = {
+					routes:{},
+					user:{
+						getRoles:function(session){
+							if(session && session.user)
+								return "user";
+							return "public";
+						},
+						loggedIn:function(session){
+							// do asynch stuffs to get passport etc
+							return session;
+						},
+						register:{
 
-	deep.ui.relink = function(selector){
-		// console.log("relink : ", selector);
-		$(selector)
-		.find("a, *[rel^='route::']")
-		.each(function(){
-			var tagName = $(this).get(0).tagName.toLowerCase(), uri = null;
-			if(tagName == 'a')
-				uri = $(this).attr("href");
+						},
+						changePassword:{
+
+						},
+						login:{
+						
+						}
+					}
+				};
+			*/
+			var routes = config.routes || {};
+			if(config.user)
+			{
+				if(!routes.login)
+					deep.utils.up(login.routes, routes);
+				// TODO : samething for register and change password
+				if(config.user.getRoles)
+					this.getRoles = config.user.getRoles;
+				if(config.user.loggedIn)
+					this.loggedIn = config.user.loggedIn;
+				return deep.store("appdata")
+				.get("/session")
+				.done(function (session) {
+					//console.log("User form appData = ", session);
+					if(!session.user)
+					{
+						deep.store("appdata").del("/session");
+						deep.generalModes("roles", deep.browser.getRoles());
+						return;
+					}
+					return deep.get("user::" + user.id)
+					.done(function (user) {
+						if(deep.browser.loggedIn)
+							this.done(deep.browser.loggedIn);
+						return { user:user };
+					})
+					.done(function(session){
+						return deep.store("appdata").put(session, "/session");
+					})
+					.done(deep.browser.getRoles)
+					.done(function (roles) {
+						deep.generalModes("roles", roles);
+					})
+					.fail(function (e) {
+						deep.generalModes("roles", deep.browser.getRoles());
+					});
+				})
+				.always(function(){
+					return deep.route(routes)
+					.done(function(s){
+						deep.ui.relink("body");
+						return s.init();
+					});
+				})
+				.logError();
+			}
 			else
-				uri = $(this).attr("rel").substring(7);
-			if(uri.substring(0,4) === 'http')
-				return;
-			if(uri[0] == '/')
-				if(uri[1] == '/')   // file
-					return;
-			if(this._deep_rerouted_)
-				return;
-			//console.log("RELINK : ", uri);
-			this._deep_rerouted_ = true;
-			$(this).click(function(e){
-				e.preventDefault();
-				//console.log("click on rerouted dom object : uri : ", uri);
-				deep.route(uri);
-			});
-		});
+				return deep.route(routes)
+				.done(function(s){
+					deep.ui.relink("body");
+					return s.init();
+				})
+				.logError();
+		}
 	};
-
-	deep.login = function(obj){
-		return deep.store("json").post(obj, "/login" ).log();
-	};
-
-	deep.logout = function(){
-		return deep.store("json").post({}, "/logout" ).log();
-	};
-
-	deep.Chain.addHandle("login", function (datas) {
-		var self = this;
-		var func = function (s, e) {
-			return deep.login(datas);
-		};
-		func._isDone_ = true;
-		addInChain.call(self, func);
-		return this;
-	});
-	deep.Chain.addHandle("logout", function () {
-		var self = this;
-		var func = function (s, e) {
-			return deep.logout();
-		};
-		func._isDone_ = true;
-		addInChain.call(self, func);
-		return this;
-	});
-
 	return deep;
-	// to do  : add login/logout in chain
 });
 
 

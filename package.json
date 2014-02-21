@@ -16,7 +16,14 @@
     "url": "https://github.com/deepjs/deep-browser.git"
   },
   "dependencies": {
-    "deepjs": ">=0.10.8"
+    "amdefine":"*",
+    "deepjs": ">=0.10.8",
+    "deep-swig" : "*",
+    "deep-data-bind" : "*",
+    "deep-local-storage" : "*",
+    "deep-widgets" : "*",
+    "deep-routes" : "*",
+    "deep-jquery" : "*"
   },
   "mappings":{
   },
