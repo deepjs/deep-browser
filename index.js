@@ -153,6 +153,9 @@ function (require, deep)
 						deep.generalModes("roles", deep.browser.getRoles());
 					});
 				})
+				.fail(function(e){
+					deep.generalModes("roles", deep.browser.getRoles());
+				})
 				.always(function(){
 					return deep.route(routes)
 					.done(function(s){
