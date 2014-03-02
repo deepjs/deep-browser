@@ -48,6 +48,7 @@ function (require, deep)
 
 	deep.client.jquery.JSON.createDefault();
 	deep.client.Swig.createDefault();
+	deep.jquery.init(jQuery);
 	deep.jquery.addDomProtocols();
 	deep.store.jstorage.Object.create("appdata");
 
