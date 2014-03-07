@@ -15,8 +15,8 @@ define([
 	"deepjs/lib/unit",
 	"deep-data-bind/json-binder",
 	"deep-routes/index",
-	"deepjs/lib/stores/collection-store",
-	"deepjs/lib/stores/object-store",
+	"deepjs/lib/stores/collection",
+	"deepjs/lib/stores/object",
 	"./lib/login",
 	"./lib/deep-link",
 	"./lib/ui"
