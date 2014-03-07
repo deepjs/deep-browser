@@ -11,6 +11,7 @@ define([
 	"deep-swig/index",
 	"deep-jquery/index",
 	"deep-jquery/clients/json",
+	"deep-jquery/clients/html",
 	"deep-local-storage/index",
 	"deepjs/lib/unit",
 	"deep-data-bind/json-binder",
@@ -46,7 +47,8 @@ function (require, deep)
 	 */
 
 
-	deep.client.jquery.JSON.createDefault();
+	deep.client.jquery.JSON.create();
+	deep.client.jquery.HTML.create();
 	deep.client.Swig.createDefault();
 	deep.jquery.init(jQuery);
 	deep.jquery.addDomProtocols();
