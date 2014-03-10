@@ -48,6 +48,7 @@ function (require, deep)
 
 
 	deep.client.jquery.JSON.create();
+	deep.client.jquery.JSON.create("login","/login");
 	deep.client.jquery.HTML.create();
 	deep.client.Swig.createDefault();
 	deep.jquery.init(jQuery);
@@ -136,7 +137,7 @@ function (require, deep)
 					if(!session.user)
 					{
 						deep.store("appdata").del("/session");
-						deep.generalModes("roles", deep.browser.getRoles());
+						deep.Modes("roles", deep.browser.getRoles());
 						return;
 					}
 					return deep.get("user::" + user.id)
@@ -150,14 +151,14 @@ function (require, deep)
 					})
 					.done(deep.browser.getRoles)
 					.done(function (roles) {
-						deep.generalModes("roles", roles);
+						deep.Modes("roles", roles);
 					})
 					.fail(function (e) {
-						deep.generalModes("roles", deep.browser.getRoles());
+						deep.Modes("roles", deep.browser.getRoles());
 					});
 				})
 				.fail(function(e){
-					deep.generalModes("roles", deep.browser.getRoles());
+					deep.Modes("roles", deep.browser.getRoles());
 				})
 				.always(function(){
 					return deep.route(routes)
