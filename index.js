@@ -23,6 +23,7 @@ define([
         "./lib/ui"
     ],
     function(require, deep) {
+        deep.context.$ = $;
 
         /**
          * TODO = create local mini sandbox that load deep-browser
