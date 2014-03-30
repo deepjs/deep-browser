@@ -1,6 +1,45 @@
 /**
+ * deep-browser/index
  * @author Gilles Coomans <gilles.coomans@gmail.com>
  */
+ /**
+    1) When you use this module : you should provide an "appdata" store to handle login/app datas
+
+        example: 
+        - in classical browser environement : use a jstorage :
+            deep.store.jstorage.Object.create("appdata");
+        - In Air environnement : use air encrypted local store (see deep-air docs)
+        - In node-webkit : use a deep-node.fs.* store
+
+        - Trough autobahn (concurrent asynch multi windows) : 
+            you not need to define it (the mecanisms are different due to server structure, see autobahn docs)
+
+
+                
+    2) main app need to provide clients or stores for : 
+        user store : (could be dummies) 
+            deep.client.jquery.JSON.create("user","/user/")
+            or
+            deep.store.Collection.create("user", [{ id:"u1", email:"john@doe.com", password:"test" }])
+            (could be ocmised)
+        login store : (could be dummy)
+            deep.client.jquery.JSON.create("login","/login/")
+            or
+            deep.store.dummy.Login.createDefault();
+        logout store : (could be dummy)
+            deep.client.jquery.JSON.create("logout","/logout/")
+            or
+            deep.store.dummy.Login.createDefault();
+
+     3) You need to set jQuery reference when you have it and before you launch views rendering : 
+        
+        deep.jquery.set(jQuery);
+
+
+    4) deeplink : you could give your config
+        deep.route.deepLink({ ...config... });
+  * 
+  */
 if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
@@ -8,54 +47,13 @@ define([
         "require",
         "deepjs/deep",
         "deepjs/lib/view",
-        "deep-swig/index",
         "deep-jquery/index",
-        "deep-jquery/ajax/json",
-        "deep-jquery/ajax/html",
-        "deep-local-storage/index",
-        "deepjs/lib/unit",
-        "deep-data-bind/json-binder",
-        "deep-routes/index",
-        "deepjs/lib/stores/collection",
-        "deepjs/lib/stores/object",
-        "./lib/login",
-        "./lib/deep-link",
-        "./lib/ui"
+        "deep-routes/browser",
+        "./lib/login"
     ],
-    function(require, deep) {
-        deep.context.$ = $;
+    function(require, deep, View, jquery, routes, login) {
 
-        /**
-         * TODO = create local mini sandbox that load deep-browser
-         */
-
-        /**
-	 * main app need to provide : 
-		user store : (could be dummies) 
-			deep.client.jquery.JSON.create("user","/user/")
-			or
-			deep.store.Collection.create("user", [{ id:"u1", email:"john@doe.com", password:"test" }])
-			(could be ocmised)
-		login store : (could be dummy)
-			deep.client.jquery.JSON.create("login","/login/")
-			or
-			deep.store.dummy.Login.createDefault();
-		logout store : (could be dummy)
-			deep.client.jquery.JSON.create("logout","/logout/")
-			or
-			deep.store.dummy.Login.createDefault();
-	 */
-
-
-        deep.jquery.JSON.create();
-        deep.jquery.JSON.create("login", "/login");
-        deep.jquery.HTML.create();
-        deep.client.Swig.createDefault();
-        deep.jquery.init(jQuery);
         deep.jquery.DOM.create("dom");
-        deep.store.jstorage.Object.create("appdata");
-
-        var login = require("./lib/login");
 
         var _uaMatch = function(ua) {
             ua = ua.toLowerCase();
@@ -71,11 +69,12 @@ define([
         };
 
         deep.browser = {
-            getRoles: function(session) {
+
+            getModes: function(session) {
                 if (session && session.user) {
                     if (session.user.roles)
-                        return user.roles;
-                    return "user";
+                        return { roles:user.roles };
+                    return { roles:"user" };
                 }
                 return "public";
             },
@@ -97,7 +96,7 @@ define([
 				var config = {
 					routes:{},
 					user:{
-						getRoles:function(session){
+						getModes:function(session){
 							if(session && session.user)
 								return "user";
 							return "public";
@@ -123,8 +122,8 @@ define([
                     if (!routes.login)
                         deep.utils.up(login.routes, routes);
                     // TODO : samething for register and change password
-                    if (config.user.getRoles)
-                        this.getRoles = config.user.getRoles;
+                    if (config.user.getModes)
+                        this.getModes = config.user.getModes;
                     if (config.user.loggedIn)
                         this.loggedIn = config.user.loggedIn;
                     return deep.store("appdata")
@@ -133,7 +132,7 @@ define([
                             //console.log("User form appData = ", session);
                             if (!session.user) {
                                 deep.store("appdata").del("/session");
-                                deep.Modes("roles", deep.browser.getRoles());
+                                deep.Modes("roles", deep.browser.getModes());
                                 return;
                             }
                             return deep.get("user::" + user.id)
@@ -147,16 +146,16 @@ define([
                                 .done(function(session) {
                                     return deep.store("appdata").put(session, "/session");
                                 })
-                                .done(deep.browser.getRoles)
+                                .done(deep.browser.getModes)
                                 .done(function(roles) {
                                     deep.Modes("roles", roles);
                                 })
                                 .fail(function(e) {
-                                    deep.Modes("roles", deep.browser.getRoles());
+                                    deep.Modes("roles", deep.browser.getModes());
                                 });
                         })
                         .fail(function(e) {
-                            deep.Modes("roles", deep.browser.getRoles());
+                            deep.Modes("roles", deep.browser.getModes());
                         })
                         .always(function() {
                             return deep.route(routes)
@@ -175,5 +174,6 @@ define([
                         .logError();
             }
         };
+
         return deep;
     });
