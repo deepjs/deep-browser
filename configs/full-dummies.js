@@ -120,14 +120,12 @@ define([
 			};
 		},
 		user: {
-			store: Collection.create('user', [{
+			store: deep.Collection('user', [{
 				id: 'u1',
 				email: 'john@doe.com',
 				password: deep.utils.Hash('test54', 'sha1')
 			}], {
-				properties:{
-					id:
-				}
+				
 			}),
 			encryption: 'sha1',
 			loggedIn: function(session) {
