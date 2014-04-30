@@ -107,7 +107,7 @@ function(require, deep, View, jquery, routes, login) {
 
                 if (config.user.loggedIn)
                     this.loggedIn = config.user.loggedIn;
-                return deep.store("appdata")
+                return deep.rest("appdata")
                     .get("/session")
                     .done(function(session) {
                         //console.log("User form appData = ", session);
@@ -122,7 +122,7 @@ function(require, deep, View, jquery, routes, login) {
                                 };
                             })
                             .done(function(session) {
-                                return deep.store("appdata").put(session, "/session");
+                                return deep.rest("appdata").put(session, "/session");
                             })
                             .done(config.sessionModes);
                     })
@@ -153,7 +153,7 @@ function(require, deep, View, jquery, routes, login) {
     //_______________
     deep.login = function(obj, from){
         var oldRoute = from || deep.route();
-        return deep.store("login")
+        return deep.rest("login")
         .post(obj)
         .done(function (user) {
             deep.context.session = {
@@ -162,7 +162,7 @@ function(require, deep, View, jquery, routes, login) {
             if(closure.app.loggedIn)
                 this.done(closure.app.loggedIn);
             deep.context.session = session;
-            return deep.store("appdata").post(session,"/session");
+            return deep.rest("appdata").post(session,"/session");
         })
         .done(closure.app.sessionModes)
         .done(deep.Modes)
@@ -178,10 +178,10 @@ function(require, deep, View, jquery, routes, login) {
     });
     //_______________
     deep.logout = function(){
-        return deep.store("logout").post({})
+        return deep.rest("logout").post({})
         .done(function () {
             delete deep.context.session;
-            return deep.store("appdata").del("/session");
+            return deep.rest("appdata").del("/session");
         })
         .logError();
     };
@@ -203,7 +203,7 @@ function(require, deep, View, jquery, routes, login) {
             if(typeof user == 'string')
                 user = { id:user };
             user._impersonate = true;
-            return deep.store("login").post(user).log();
+            return deep.rest("login").post(user).log();
         };
         func._isDone_ = true;
         deep.utils.addInChain.call(self, func);
@@ -222,7 +222,7 @@ function(require, deep, View, jquery, routes, login) {
         if(session.user && closure.app.loggedIn)
             return deep.when(closure.app.loggedIn(session))
             .done(function(session){
-                return deep.store("appdata").post(session,"/session", false);
+                return deep.rest("appdata").post(session,"/session", false);
             })
             .done(closure.app.sessionModes)
             .done(function (modes) {
@@ -231,7 +231,7 @@ function(require, deep, View, jquery, routes, login) {
                 return session;
             });
         deep.Modes(closure.app.sessionModes(session));
-        return deep.store("appdata").post(session,"/session", false);
+        return deep.rest("appdata").post(session,"/session", false);
     };
     
     deep.Chain.add("session", function (session) {
