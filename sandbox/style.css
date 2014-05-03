@@ -1,0 +1,47 @@
+body {
+	font-family: Georgia;
+	background-color :#93b2be;
+}
+
+h1 {
+	color:#ffffff;
+}
+
+.dp-try {
+	background-color:#EEEEEE;
+	margin: 10px;
+	padding: 8px;
+	padding-top:1px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.code {
+	background-color:#FFFFFF;
+	padding: 10px;
+	padding-bottom: 0px;
+	margin-bottom:5px;
+	font-size: 14px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.dp-try-output {
+	background-color:#FFFFFF;
+	padding: 10px;
+	margin-bottom:5px;
+	border-top:1px dotted #333333;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.dp-try-sandbox {
+	background-color:#EEEEEE;
+	margin: 10px;
+	padding: 10px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.dp-try-input {
+	height:30px;
+	width:300px;
+}

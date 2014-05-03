@@ -1,22 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-	<title>deepjs sandbox</title>
+	<title>deep-browser sandbox</title>
 	 <meta charset="utf-8">
-
+	 <link rel="stylesheet" type="text/css" href="style.css">
+	 <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+	<script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
 </head>
 <body>
-	<h1>deepjs sandbox</h1>
+	<h1>deep-browser sandbox</h1>
 
 	<div>
-		<button id="run-core-units">run core units</button>
+		<button id="run-core-units">tests</button>
+		<button id="run-core-units-verbose">tests (verbose)</button>
 	</div>
 
-	<span>#reports-container</span>
-	<div id="reports-container">empty</div>
-	<span>#content-container</span>
-	<div id="content-container">empty</div>
+	<div id="reports-container"></div>
 
+	<div dp-try-sandbox class="dp-try-sandbox">
+		<textarea class="dp-try-input">deep("hello").log()</textarea>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep(1).log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep([1,2,3]).log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep([1,2,3]).query("./*").log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep([1,2,3]).query("./0").log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);
+deep("myprotoc::").log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);<br/>
+deep("myprotoc::").query("./0").log();
+		</pre>
+	</div>
+	<div dp-try class="dp-try">
+		<pre class="code">
+deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);<br/>
+deep("myprotoc::e1").log();
+		</pre>
+	</div>
 	<script src="./js/jquery-1.7.1.min.js"></script>
     <script data-main="main" src="./js/require.js"></script>
 	
