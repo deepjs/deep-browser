@@ -19,9 +19,6 @@
 
 	<div id="reports-container"></div>
 
-	<div dp-try-sandbox class="dp-try-sandbox">
-		<textarea class="dp-try-input">deep("hello").log()</textarea>
-	</div>
 	<pre dp-try class="code">
 deep(1).log();
 	</pre>
@@ -35,16 +32,16 @@ deep([1,2,3]).query("./*").log();
 deep([1,2,3]).query("./0").log();
 	</pre>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);
-deep("myprotoc::").log();
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
+deep("mycollec::").log();
 	</pre>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);<br/>
-deep("myprotoc::").query("./0").log();
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);<br/>
+deep("mycollec::").query("./0").log();
 	</pre>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);<br/>
-deep("myprotoc::e1").log();
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);<br/>
+deep("mycollec::e1").log();
 	</pre>
 
 	<pre dp-try class="code">
@@ -96,9 +93,9 @@ deep(myOwnLand).log("myOwnLand is : ");
 	<h3>Restful API usage</h3>
 	<p>Simple post. The object is decorated by generated id. (you could provide yours)</p>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world" }]);
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
 //...
-deep.rest("myprotoc")
+deep.rest("mycollec")
 .post({ title:"new posted object title"})
 .log("result posted : ")
 
@@ -107,9 +104,9 @@ deep.rest("myprotoc")
 	</pre>
 	<p>Simple put. Put replaces entirely the old entry by the new one. You could loose some datas.</p>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world", amount:3 }]);
+deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
 //...
-deep.rest("myprotoc")
+deep.rest("mycollec")
 .get()
 .log("all items from Collection : ")
 
@@ -121,9 +118,9 @@ deep.rest("myprotoc")
 	</pre>
 	<p>Simple patch. Patch updates only provided properties.</p>
 	<pre dp-try class="code">
-deep.Collection("myprotoc", [{ id:"e1", title:"hello world", amount:3 }]);
+deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
 //...
-deep.rest("myprotoc")
+deep.rest("mycollec")
 .get()
 .log("all items from Collection (before) : ")
 
@@ -133,6 +130,9 @@ deep.rest("myprotoc")
 .get()
 .log("\nall items from Collection (after) : ");
 	</pre>
+
+	<script src="./js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
 	<script src="./js/jquery-1.7.1.min.js"></script>
     <script data-main="main" src="./js/require.js"></script>
 	
