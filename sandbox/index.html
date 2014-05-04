@@ -12,7 +12,7 @@
 <body>
 	<h1>deep-browser sandbox</h1>
 
-	<div>
+	<div id="tests-bar">
 		<button id="run-core-units">tests</button>
 		<button id="run-core-units-verbose">tests (verbose)</button>
 	</div>
@@ -33,14 +33,17 @@ deep([1,2,3]).query("./0").log();
 	</pre>
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
+//...
 deep("mycollec::").log();
 	</pre>
 	<pre dp-try class="code">
-deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);<br/>
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
+//...
 deep("mycollec::").query("./0").log();
 	</pre>
 	<pre dp-try class="code">
-deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);<br/>
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
+//...
 deep("mycollec::e1").log();
 	</pre>
 
@@ -102,7 +105,7 @@ deep.rest("mycollec")
 .get()
 .log("all items from collection : ");
 	</pre>
-	<p>Simple put. Put replaces entirely the old entry by the new one. You could loose some datas.</p>
+	<p>Simple put. Put replaces entirely the old entry by the new one. Some datas could be loosed.</p>
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
 //...
@@ -132,7 +135,6 @@ deep.rest("mycollec")
 	</pre>
 
 	<script src="./js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-
 	<script src="./js/jquery-1.7.1.min.js"></script>
     <script data-main="main" src="./js/require.js"></script>
 	
