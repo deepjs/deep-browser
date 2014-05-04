@@ -21,8 +21,8 @@ h1 {
 	padding-bottom: 1px;
 	margin-top:7px;
 	margin-bottom:1px;
-	font-size: 14px;
 	/*border:1px solid #DDDDDD;*/
+	overflow: scroll;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
@@ -46,8 +46,19 @@ h1 {
 	border:1px solid #777777;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
+	overflow: scroll;
 }
-
+.dp-try-example {
+	background-color:#FFFFFF;
+	padding: 10px;
+	margin-top:5px;
+	margin-bottom:1px;
+	border:1px solid #7eaabb;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	overflow: scroll;
+	box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+}
 .dp-try-sandbox {
 	background-color:#EEEEEE;
 	margin: 10px;

@@ -19,6 +19,7 @@
 
 	<div id="reports-container"></div>
 
+<h3>Chain examples</h3>
 	<pre dp-try class="code">
 deep(1).log();
 	</pre>
@@ -28,9 +29,11 @@ deep([1,2,3]).log();
 	<pre dp-try class="code">
 deep([1,2,3]).query("./*").log();
 	</pre>
-	<pre dp-try class="code">
+	<pre dp-try class="" lass="code">
 deep([1,2,3]).query("./0").log();
 	</pre>
+
+<h3>Collection through protocol</h3>
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
 //...
@@ -47,7 +50,61 @@ deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
 deep("mycollec::e1").log();
 	</pre>
 
+	
+	<h3>Restful API usage</h3>
+	<p>Post : The object is decorated by generated id. (you could provide yours)</p>
 	<pre dp-try class="code">
+deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
+//...
+deep.rest("mycollec")
+.post({ title:"new posted object title"})
+.log("post result : ")
+
+.get()
+.log("\nall items from collection : ");
+	</pre>
+	<p>Put : replaces entirely the old entry by the new one. Some datas could be loosed.</p>
+	<pre dp-try class="code">
+deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
+//...
+deep.rest("mycollec")
+.get()
+.log("all items from Collection : ")
+
+.put({ id:"e1", title:"hello deepjs"})
+.log("\nputed result : ")
+
+.get()
+.log("\nall items from Collection : ");
+	</pre>
+	<p>Patch : updates only provided properties.</p>
+	<pre dp-try class="code">
+deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
+//...
+deep.rest("mycollec")
+.get()
+.log("all items from Collection (before) : ")
+
+.patch({ id:"e1", title:"hello deepjs"})
+.log("\npatched result : ")
+
+.get()
+.log("\nall items from Collection (after) : ");
+	</pre>
+
+	<h3>Views</h3>
+	<div id="view-example" class="dp-try-example">Nothing yet.</div>
+	<pre dp-try class="code" view="#view-example">
+deep.View({
+	how:'&lt;div&gt;hello&lt;/div&gt;',
+	where:'dom.htmlOf::#view-example'
+})
+.refresh()
+.log();
+	</pre>
+
+<h3>Modelisation example</h3>
+<pre dp-try class="code">
 //-----------------Models
 var land = {
 	location : "pls override this value with your own location",
@@ -93,47 +150,6 @@ deep(myOwnLand)
 
 deep(myOwnLand).log("myOwnLand is : ");
 	</pre>
-	<h3>Restful API usage</h3>
-	<p>Simple post. The object is decorated by generated id. (you could provide yours)</p>
-	<pre dp-try class="code">
-deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
-//...
-deep.rest("mycollec")
-.post({ title:"new posted object title"})
-.log("result posted : ")
-
-.get()
-.log("all items from collection : ");
-	</pre>
-	<p>Simple put. Put replaces entirely the old entry by the new one. Some datas could be loosed.</p>
-	<pre dp-try class="code">
-deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
-//...
-deep.rest("mycollec")
-.get()
-.log("all items from Collection : ")
-
-.put({ id:"e1", title:"hello deepjs"})
-.log("\nresult puted : ")
-
-.get()
-.log("\nall items from Collection : ");
-	</pre>
-	<p>Simple patch. Patch updates only provided properties.</p>
-	<pre dp-try class="code">
-deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
-//...
-deep.rest("mycollec")
-.get()
-.log("all items from Collection (before) : ")
-
-.patch({ id:"e1", title:"hello deepjs"})
-.log("\nresult puted : ")
-
-.get()
-.log("\nall items from Collection (after) : ");
-	</pre>
-
 	<script src="./js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./js/jquery-1.7.1.min.js"></script>
     <script data-main="main" src="./js/require.js"></script>
