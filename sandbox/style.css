@@ -48,7 +48,7 @@ h1 {
 	border-radius: 5px;
 	overflow: scroll;
 }
-.dp-try-example {
+.dp-try-view {
 	background-color:#FFFFFF;
 	padding: 10px;
 	margin-top:5px;
@@ -59,15 +59,17 @@ h1 {
 	overflow: scroll;
 	box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
-.dp-try-sandbox {
-	background-color:#EEEEEE;
-	margin: 10px;
-	padding: 10px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+
+.dp-try-button {
+	margin-top:1px;
 }
 
-.dp-try-input {
-	height:30px;
-	width:300px;
+.dp-try-edit {
+	margin-top:1px;
+
 }
+
+.dp-try-reset {
+	margin-top:1px;
+}
+
