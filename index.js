@@ -138,7 +138,7 @@ function(require, deep, View, jquery, routes, login) {
                         deep.route.relink("body");
                         return s.init();
                     })
-                    .logError();
+                    .elog();
             } else
                 return deep.route(routes)
                     .done(function(s) {
@@ -146,7 +146,7 @@ function(require, deep, View, jquery, routes, login) {
                         deep.route.relink("body");
                         return s.init();
                     })
-                    .logError();
+                    .elog();
         }
     };
 
@@ -166,7 +166,7 @@ function(require, deep, View, jquery, routes, login) {
         })
         .done(closure.app.sessionModes)
         .done(deep.Modes)
-        .logError();
+        .elog();
     };
     deep.Chain.add("login", function (datas) {
         var self = this;
@@ -183,7 +183,7 @@ function(require, deep, View, jquery, routes, login) {
             delete deep.context.session;
             return deep.rest("appdata").del("/session");
         })
-        .logError();
+        .elog();
     };
     deep.Chain.add("logout", function () {
         var self = this;
