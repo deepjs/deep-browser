@@ -53,7 +53,7 @@ define([
 						where: 'dom.htmlOf::#content'
 					}),
 					user: {
-						backgrounds: ['this::../public'],
+						_backgrounds: ['this::../public'],
 						how: '<div>home user <button dp-route="/logout">logout</button></div>'
 					}
 				}, {
