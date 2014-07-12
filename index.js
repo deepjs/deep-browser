@@ -1,7 +1,7 @@
 /**
-* deep-browser/index
-* @author Gilles Coomans <gilles.coomans@gmail.com>
-*/
+ * deep-browser/index
+ * @author Gilles Coomans <gilles.coomans@gmail.com>
+ */
 /**
 1) When you use this module : you should provide an "appdata" store to handle login/app datas
 
@@ -41,160 +41,166 @@
 * 
 */
 if (typeof define !== 'function') {
-var define = require('amdefine')(module);
+	var define = require('amdefine')(module);
 }
 define([
-    "require",
-    "deepjs/deep",
-    "deepjs/lib/view",
-    "deep-jquery/index",
-    "deep-routes/browser"
-],
-function(require, deep, View, jquery, routes, login) {
+		"require",
+		"deepjs/deep",
+		"deepjs/lib/view",
+		"deep-jquery/index",
+		"deep-routes/browser"
+	],
+	function(require, deep, View, jquery, routes, login) {
 
-    deep.jquery.DOM.create("dom");
+		deep.jquery.DOM.create("dom");
 
-    var _uaMatch = function(ua) {
-        ua = ua.toLowerCase();
-        var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-            /(webkit)[ \/]([\w.]+)/.exec(ua) ||
-            /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
-            /(msie) ([\w.]+)/.exec(ua) ||
-            ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) || [];
-        return {
-            browser: match[1] || '',
-            version: match[2] || '0'
-        };
-    };
+		var _uaMatch = function(ua) {
+			ua = ua.toLowerCase();
+			var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+				/(webkit)[ \/]([\w.]+)/.exec(ua) ||
+				/(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+				/(msie) ([\w.]+)/.exec(ua) ||
+				ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) || [];
+			return {
+				browser: match[1] || '',
+				version: match[2] || '0'
+			};
+		};
 
-   // if(!deep.isNode && !deep.utils.Hash)        // simple fake (non secure) Hash from http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-   
+		// if(!deep.isNode && !deep.utils.Hash)        // simple fake (non secure) Hash from http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
 
-    deep.utils.userAgent = function() {
-        var browser = {},
-            matched = _uaMatch(navigator.userAgent);
-        if (matched.browser) {
-            browser[matched.browser] = true;
-            browser.version = matched.version;
-        }
-        if (browser.chrome)
-            browser.webkit = true;
-        else if (browser.webkit)
-            browser.safari = true;
-        return browser;
-    };
 
-    var closure = {
-        app:null
-    };
+		deep.utils.userAgent = function() {
+			var browser = {},
+				matched = _uaMatch(navigator.userAgent);
+			if (matched.browser) {
+				browser[matched.browser] = true;
+				browser.version = matched.version;
+			}
+			if (browser.chrome)
+				browser.webkit = true;
+			else if (browser.webkit)
+				browser.safari = true;
+			return browser;
+		};
 
-    deep.browser = {
-        sessionModes: function(session) {
-            if (session && session.user) {
-                if (session.user.roles)
-                    return { roles:user.roles };
-                return { roles:"user" };
-            }
-            return { roles:"public" };
-        },
-        init: function(config) {
-       
-            var routes = config.routes || {};
-            closure.app = config;
-            config.sessionModes = config.sessionModes || this.sessionModes;
-            if (config.user) {
-                // TODO : samething for register and change password
+		var closure = {
+			app: null
+		};
 
-                if (config.user.loggedIn)
-                    this.loggedIn = config.user.loggedIn;
-                return deep.rest("appdata")
-                    .get("/session")
-                    .done(function(session) {
-                        //console.log("User form appData = ", session);
-                        if (!session.user)
-                            return new Error();
-                        return deep.get("user::" + user.id)
-                            .done(function(user) {
-                                if (config.loggedIn)
-                                    this.done(config.loggedIn);
-                                return {
-                                    user: user
-                                };
-                            })
-                            .done(function(session) {
-                                return deep.rest("appdata").put(session, "/session");
-                            })
-                            .done(config.sessionModes);
-                    })
-                    .fail(function(e) {
-                        return config.sessionModes();
-                    })
-                    .done(deep.Modes)
-                    .done(function() {
-                        return deep.route(routes)
-                    })
-                    .done(function(s) {
-                        console.log("route init asynch done : will relink body")
-                        deep.route.relink("body");
-                        return s.init();
-                    })
-                    .elog();
-            } else
-                return deep.route(routes)
-                    .done(function(s) {
-                        console.log("route init synch done : will relink body")
-                        deep.route.relink("body");
-                        return s.init();
-                    })
-                    .elog();
-        }
-    };
+		deep.browser = {
+			sessionModes: function(session) {
+				if (session && session.user) {
+					if (session.user.roles)
+						return {
+							roles: user.roles
+						};
+					return {
+						roles: "user"
+					};
+				}
+				return {
+					roles: "public"
+				};
+			},
+			init: function(config) {
 
-    //_______________
-    deep.login = function(obj, from){
-        var oldRoute = from || deep.route();
-        return deep.rest("login")
-        .post(obj)
-        .done(function (user) {
-            deep.context.session = {
-                user:user
-            };
-            if(closure.app.loggedIn)
-                this.done(closure.app.loggedIn);
-            deep.context.session = session;
-            return deep.rest("appdata").post(session,"/session");
-        })
-        .done(closure.app.sessionModes)
-        .done(deep.Modes)
-        .elog();
-    };
-    deep.Chain.add("login", function (datas) {
-        var self = this;
-        var func = function (s, e) {
-            return deep.login(datas);
-        };
-        func._isDone_ = true;
-        return deep.utils.addInChain.call(self, func);
-    });
-    //_______________
-    deep.logout = function(){
-        return deep.rest("logout").post({})
-        .done(function () {
-            delete deep.context.session;
-            return deep.rest("appdata").del("/session");
-        })
-        .elog();
-    };
-    deep.Chain.add("logout", function () {
-        var self = this;
-        var func = function (s, e) {
-            return deep.logout();
-        };
-        func._isDone_ = true;
-        return deep.utils.addInChain.call(self, func);
-    });
-    //_______________
-    /*deep.impersonate = function(obj){
+				var routes = config.routes || {};
+				closure.app = config;
+				config.sessionModes = config.sessionModes || this.sessionModes;
+				if (config.user) {
+					// TODO : samething for register and change password
+
+					if (config.user.loggedIn)
+						this.loggedIn = config.user.loggedIn;
+					return deep.rest("appdata")
+						.get("/session")
+						.done(function(session) {
+							//console.log("User form appData = ", session);
+							if (!session.user)
+								return new Error();
+							return deep.get("user::" + user.id)
+								.done(function(user) {
+									if (config.loggedIn)
+										this.done(config.loggedIn);
+									return {
+										user: user
+									};
+								})
+								.done(function(session) {
+									return deep.rest("appdata").put(session, "/session");
+								})
+								.done(config.sessionModes);
+						})
+						.fail(function(e) {
+							return config.sessionModes();
+						})
+						.done(deep.Modes)
+						.done(function() {
+							return deep.route(routes)
+						})
+						.done(function(s) {
+							console.log("route init asynch done : will relink body")
+							deep.route.relink("body");
+							return s.init();
+						})
+						.elog();
+				} else
+					return deep.route(routes)
+						.done(function(s) {
+							console.log("route init synch done : will relink body")
+							deep.route.relink("body");
+							return s.init();
+						})
+						.elog();
+			}
+		};
+
+		//_______________
+		deep.login = function(obj, from) {
+			var oldRoute = from || deep.route();
+			return deep.rest("login")
+				.post(obj)
+				.done(function(user) {
+					deep.context.session = {
+						user: user
+					};
+					if (closure.app.loggedIn)
+						this.done(closure.app.loggedIn);
+					deep.context.session = session;
+					return deep.rest("appdata").post(session, "/session");
+				})
+				.done(closure.app.sessionModes)
+				.done(deep.Modes)
+				.elog();
+		};
+		deep.Chain.add("login", function(datas) {
+			var self = this;
+			var func = function(s, e) {
+				return deep.login(datas);
+			};
+			func._isDone_ = true;
+			return deep.utils.addInChain.call(self, func);
+		});
+		//_______________
+		deep.logout = function() {
+			return deep.rest("logout").post({})
+				.done(function() {
+					delete deep.context.session;
+					return deep.rest("appdata").del("/session");
+				})
+				.elog();
+		};
+		deep.Chain.add("logout", function() {
+			var self = this;
+			var func = function(s, e) {
+				return deep.logout();
+			};
+			func._isDone_ = true;
+			return deep.utils.addInChain.call(self, func);
+		});
+		//_______________
+		/*deep.impersonate = function(obj){
         return deep({}).impersonate(obj);
     };
     deep.Chain.add("impersonate", function (user) {
@@ -209,39 +215,39 @@ function(require, deep, View, jquery, routes, login) {
         deep.utils.addInChain.call(self, func);
         return this;
     });*/
-    //___________________
-    /**
-     * start a chain with provided session.
-     * @param  {[type]} session [description]
-     * @return {[type]}         [description]
-     */
-    deep.session = function(session){
-        if(!session)
-            return deep.context.session;
-        deep.context.session = session;
-        if(session.user && closure.app.loggedIn)
-            return deep.when(closure.app.loggedIn(session))
-            .done(function(session){
-                return deep.rest("appdata").post(session,"/session", false);
-            })
-            .done(closure.app.sessionModes)
-            .done(function (modes) {
-                //gestion de lurl + route avec l'ancien url
-                deep.Modes(modes);
-                return session;
-            });
-        deep.Modes(closure.app.sessionModes(session));
-        return deep.rest("appdata").post(session,"/session", false);
-    };
-    
-    deep.Chain.add("session", function (session) {
-        var self = this;
-        var func = function (s, e) {
-            return deep.session(session);
-        };
-        func._isDone_ = true;
-        return  deep.utils.addInChain.call(self, func);
-    });
+		//___________________
+		/**
+		 * start a chain with provided session.
+		 * @param  {[type]} session [description]
+		 * @return {[type]}         [description]
+		 */
+		deep.session = function(session) {
+			if (!session)
+				return deep.context.session;
+			deep.context.session = session;
+			if (session.user && closure.app.loggedIn)
+				return deep.when(closure.app.loggedIn(session))
+					.done(function(session) {
+						return deep.rest("appdata").post(session, "/session", false);
+					})
+					.done(closure.app.sessionModes)
+					.done(function(modes) {
+						//gestion de lurl + route avec l'ancien url
+						deep.Modes(modes);
+						return session;
+					});
+			deep.Modes(closure.app.sessionModes(session));
+			return deep.rest("appdata").post(session, "/session", false);
+		};
 
-    return deep;
-});
+		deep.Chain.add("session", function(session) {
+			var self = this;
+			var func = function(s, e) {
+				return deep.session(session);
+			};
+			func._isDone_ = true;
+			return deep.utils.addInChain.call(self, func);
+		});
+
+		return deep;
+	});
