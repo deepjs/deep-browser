@@ -11,7 +11,7 @@ define([
 	"require",
 	"deepjs/deep",
 	"../lib/dummies",
-	'deepjs/lib/view',
+	'deepjs/lib/views/view',
 	'deepjs/lib/stores/collection',
 	'../lib/login'
 ], function(require, deep, dummies, View, Collection, login) {

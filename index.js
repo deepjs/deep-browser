@@ -46,7 +46,7 @@ if (typeof define !== 'function') {
 define([
 		"require",
 		"deepjs/deep",
-		"deepjs/lib/view",
+		"deepjs/lib/views/view",
 		"deep-jquery/index",
 		"deep-routes/browser"
 	],
