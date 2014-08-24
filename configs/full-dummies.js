@@ -11,7 +11,7 @@ define([
 	"require",
 	"deepjs/deep",
 	"../lib/dummies",
-	'deepjs/lib/views/view',
+	'deep-views/lib/view',
 	'deepjs/lib/stores/collection',
 	'../lib/login'
 ], function(require, deep, dummies, View, Collection, login) {
@@ -80,12 +80,12 @@ define([
 				login: deep.View({
 					route: '/login',
 					remove: function() {
-						var $ = deep.context.$;
+						var $ = deep.$();
 						return $('#login').hide();
 					},
 					load: null,
 					login: function() {
-						var $ = deep.context.$;
+						var $ = deep.$();
 						if ($('#email').val() && $('#password').val())
 							deep.login({
 								email: $('#email').val(),
@@ -100,7 +100,7 @@ define([
 								});
 					},
 					refresh: function() {
-						var $ = deep.context.$;
+						var $ = deep.$();
 						$('#login-error').hide();
 						if (!this.initialised) {
 							this.initialised = true;

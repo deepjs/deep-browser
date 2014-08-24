@@ -13,8 +13,7 @@
 
     - Trough autobahn (concurrent asynch multi windows) : 
         you not need to define it (the mecanisms are different due to server structure, see autobahn docs)
-
-
+        
             
 2) main app need to provide clients or stores for : 
     user store : (could be dummies) 
@@ -46,13 +45,13 @@ if (typeof define !== 'function') {
 define([
 		"require",
 		"deepjs/deep",
-		"deepjs/lib/views/view",
-		"deep-jquery/index",
+		"deep-views/index",
+		"deep-jquery/lib/dom",
 		"deep-routes/browser"
 	],
 	function(require, deep, View, jquery, routes, login) {
 
-		deep.jquery.DOM.create("dom");
+		deep.jquery.dom("dom");
 
 		var _uaMatch = function(ua) {
 			ua = ua.toLowerCase();
@@ -162,12 +161,12 @@ define([
 			return deep.rest("login")
 				.post(obj)
 				.done(function(user) {
-					deep.context.session = {
+					deep.Promise.context.session = {
 						user: user
 					};
 					if (closure.app.loggedIn)
 						this.done(closure.app.loggedIn);
-					deep.context.session = session;
+					deep.Promise.context.session = session;
 					return deep.rest("appdata").post(session, "/session");
 				})
 				.done(closure.app.sessionModes)
@@ -186,7 +185,7 @@ define([
 		deep.logout = function() {
 			return deep.rest("logout").post({})
 				.done(function() {
-					delete deep.context.session;
+					delete deep.Promise.context.session;
 					return deep.rest("appdata").del("/session");
 				})
 				.elog();
@@ -223,8 +222,8 @@ define([
 		 */
 		deep.session = function(session) {
 			if (!session)
-				return deep.context.session;
-			deep.context.session = session;
+				return deep.Promise.context.session;
+			deep.Promise.context.session = session;
 			if (session.user && closure.app.loggedIn)
 				return deep.when(closure.app.loggedIn(session))
 					.done(function(session) {
