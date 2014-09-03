@@ -3,7 +3,7 @@
   "description":"everything you need to use deepjs browser side.",
   "author":"Gilles Coomans <gilles.coomans@gmail.com>",
   "contributors": ["Philippe Delabye <phil@chemicalrules.net>"],
-  "version": "0.2.0",
+  "version": "0.2.1",
   "contributors": [],
   "licenses": [
     {
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "amdefine":"*",
-    "deepjs": ">=0.13.0",
+    "deepjs": ">=0.13.1",
     "deep-routes" : "*",
     "deep-views" : "*",
     "deep-jquery" : "*"
