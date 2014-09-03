@@ -112,7 +112,7 @@ define([
 
 					if (config.user.loggedIn)
 						this.loggedIn = config.user.loggedIn;
-					return deep.rest("appdata")
+					return deep.restful("appdata")
 						.get("/session")
 						.done(function(session) {
 							//console.log("User form appData = ", session);
@@ -127,7 +127,7 @@ define([
 									};
 								})
 								.done(function(session) {
-									return deep.rest("appdata").put(session, "/session");
+									return deep.restful("appdata").put(session, "/session");
 								})
 								.done(config.sessionModes);
 						})
@@ -158,7 +158,7 @@ define([
 		//_______________
 		deep.login = function(obj, from) {
 			var oldRoute = from || deep.route();
-			return deep.rest("login")
+			return deep.restful("login")
 				.post(obj)
 				.done(function(user) {
 					deep.Promise.context.session = {
@@ -167,7 +167,7 @@ define([
 					if (closure.app.loggedIn)
 						this.done(closure.app.loggedIn);
 					deep.Promise.context.session = session;
-					return deep.rest("appdata").post(session, "/session");
+					return deep.restful("appdata").post(session, "/session");
 				})
 				.done(closure.app.sessionModes)
 				.done(deep.Modes)
@@ -183,10 +183,10 @@ define([
 		});
 		//_______________
 		deep.logout = function() {
-			return deep.rest("logout").post({})
+			return deep.restful("logout").post({})
 				.done(function() {
 					delete deep.Promise.context.session;
-					return deep.rest("appdata").del("/session");
+					return deep.restful("appdata").del("/session");
 				})
 				.elog();
 		};
@@ -208,7 +208,7 @@ define([
             if(typeof user == 'string')
                 user = { id:user };
             user._impersonate = true;
-            return deep.rest("login").post(user).log();
+            return deep.restful("login").post(user).log();
         };
         func._isDone_ = true;
         deep.utils.addInChain.call(self, func);
@@ -227,7 +227,7 @@ define([
 			if (session.user && closure.app.loggedIn)
 				return deep.when(closure.app.loggedIn(session))
 					.done(function(session) {
-						return deep.rest("appdata").post(session, "/session", false);
+						return deep.restful("appdata").post(session, "/session", false);
 					})
 					.done(closure.app.sessionModes)
 					.done(function(modes) {
@@ -236,7 +236,7 @@ define([
 						return session;
 					});
 			deep.Modes(closure.app.sessionModes(session));
-			return deep.rest("appdata").post(session, "/session", false);
+			return deep.restful("appdata").post(session, "/session", false);
 		};
 
 		deep.Chain.add("session", function(session) {

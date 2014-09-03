@@ -56,7 +56,7 @@ deep("mycollec::e1").log();
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world" }]);
 //...
-deep.rest("mycollec")
+deep.restful("mycollec")
 .post({ title:"new posted object title"})
 .log("post result : ")
 
@@ -67,7 +67,7 @@ deep.rest("mycollec")
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
 //...
-deep.rest("mycollec")
+deep.restful("mycollec")
 .get()
 .log("all items from Collection : ")
 
@@ -81,7 +81,7 @@ deep.rest("mycollec")
 	<pre dp-try class="code">
 deep.Collection("mycollec", [{ id:"e1", title:"hello world", amount:3 }]);
 //...
-deep.rest("mycollec")
+deep.restful("mycollec")
 .get()
 .log("all items from Collection (before) : ")
 
