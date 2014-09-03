@@ -20,7 +20,6 @@
     "deepjs": ">=0.13.0",
     "deep-routes" : "*",
     "deep-views" : "*",
-    "deep-restful" : "*",
     "deep-jquery" : "*"
   },
   "mappings":{

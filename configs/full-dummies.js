@@ -138,6 +138,5 @@ define([
 			logout: dummies.Logout.create()
 		}
 	};
-	//deep.utils.up(login, config.routes);
 	return config;
 });
