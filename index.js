@@ -179,7 +179,7 @@ define([
 				return deep.login(datas);
 			};
 			func._isDone_ = true;
-			return deep.utils.addInChain.call(self, func);
+			return deep.Promise.addInChain.call(self, func);
 		});
 		//_______________
 		deep.logout = function() {
@@ -196,7 +196,7 @@ define([
 				return deep.logout();
 			};
 			func._isDone_ = true;
-			return deep.utils.addInChain.call(self, func);
+			return deep.Promise.addInChain.call(self, func);
 		});
 		//_______________
 		/*deep.impersonate = function(obj){
@@ -211,7 +211,7 @@ define([
             return deep.restful("login").post(user).log();
         };
         func._isDone_ = true;
-        deep.utils.addInChain.call(self, func);
+        deep.Promise.addInChain.call(self, func);
         return this;
     });*/
 		//___________________
@@ -245,7 +245,7 @@ define([
 				return deep.session(session);
 			};
 			func._isDone_ = true;
-			return deep.utils.addInChain.call(self, func);
+			return deep.Promise.addInChain.call(self, func);
 		});
 
 		return deep;
