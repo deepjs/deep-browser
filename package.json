@@ -1,31 +1,29 @@
 {
-  "name": "deep-browser",
-  "description":"everything you need to use deepjs browser side.",
-  "author":"Gilles Coomans <gilles.coomans@gmail.com>",
-  "contributors": ["Philippe Delabye <phil@chemicalrules.net>"],
-  "version": "0.2.1",
-  "contributors": [],
-  "licenses": [
-    {
-         "type": "LGPLv3.0",
-         "url": "http://www.gnu.org/licenses/lgpl-3.0.txt"
-     }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/deepjs/deep-browser.git"
-  },
-  "dependencies": {
-    "amdefine":"*",
-    "deepjs": ">=0.13.1",
-    "deep-routes" : "*",
-    "deep-views" : "*",
-    "deep-jquery" : "*"
-  },
-  "mappings":{
-  },
-  "engine":{
-  	"node":">=0.10.0"
-  },
-  "main":"./index.js"
+ "name": "deep-browser",
+ "description": "everything you need to use deepjs browser side.",
+ "author": "Gilles Coomans <gilles.coomans@gmail.com>",
+ "contributors": [],
+ "version": "0.2.2",
+ "licenses": [
+  {
+   "type": "LGPLv3.0",
+   "url": "http://www.gnu.org/licenses/lgpl-3.0.txt"
+  }
+ ],
+ "repository": {
+  "type": "git",
+  "url": "https://github.com/deepjs/deep-browser.git"
+ },
+ "dependencies": {
+  "amdefine": "*",
+  "deepjs": ">=0.13.1",
+  "deep-routes": "*",
+  "deep-views": "*",
+  "deep-jquery": "*"
+ },
+ "mappings": {},
+ "engine": {
+  "node": ">=0.10.0"
+ },
+ "main": "./index.js"
 }
