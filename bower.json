@@ -1,0 +1,25 @@
+{
+	"name": "deep-browser",
+	"description": "Generic browser environnement that loads and ties deepjs modules.",
+	"version": "0.2.2",
+	"authors": [
+		"Gilles Coomans <gilles.coomans@gmail.com>"
+	],
+	"moduleType": [
+		"amd",
+		"node"
+	],
+	"licenses": [{
+		"type": "LGPLv3.0",
+		"url": "http://www.gnu.org/licenses/lgpl-3.0.txt"
+	}],
+	"homepage": "https://github.com/deepjs/deep-browser",
+	"dependencies": {
+		"deepjs": "~0.13.7",
+		"deep-restful": "~0.2.6",
+		"deep-routes": "~0.3.7",
+		"jquery": "~2.1.1",
+		"requirejs": "~2.1.15",
+		"min-history": ">=0.1.3"
+	}
+}
