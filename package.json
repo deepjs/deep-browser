@@ -3,7 +3,7 @@
  "description": "Generic browser environnement that loads and ties deepjs modules.",
  "author": "Gilles Coomans <gilles.coomans@gmail.com>",
  "contributors": [],
- "version": "0.2.2",
+ "version": "0.3.0",
  "licenses": [
   {
    "type": "LGPLv3.0",
@@ -15,12 +15,12 @@
   "url": "https://github.com/deepjs/deep-browser.git"
  },
  "dependencies": {
-    "deepjs": ">=0.13.7",
-    "deep-restful": ">=0.2.6",
-    "deep-routes": ">=0.3.7",
-    "jquery": "~2.1.1",
-    "requirejs": "~2.1.15",
-    "min-history": ">=0.1.3"
+  "deepjs": ">=0.13.7",
+  "deep-restful": ">=0.2.6",
+  "deep-routes": ">=0.3.7",
+  "jquery": "~2.1.1",
+  "requirejs": "~2.1.15",
+  "min-history": ">=0.1.3"
  },
  "mappings": {},
  "engine": {
